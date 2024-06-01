@@ -6,9 +6,9 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Abstract
     {
         protected CoraxQueryValueBase(object value, bool isParameter = false)
         {
-            Value = value;
+            Value = value is ICoraxQueryCriteria asCriteria ? new ICoraxQueryCriteria[] { asCriteria } : value;
             IsParameter = isParameter;
-            IsCriteria = value is ICoraxQueryCriteria;
+            IsCriteria = Value is IEnumerable<ICoraxQueryCriteria>;
         }
 
         public virtual bool IsParameter { get; }
