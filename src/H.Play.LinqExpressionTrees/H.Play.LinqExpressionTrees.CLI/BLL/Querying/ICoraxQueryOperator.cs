@@ -8,6 +8,6 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
         string Symbol { get; }
         string[] SymbolAliases { get; }
         IDictionary<string, object> Attributes { get; }
-        string ToStorageSymbol();
+        string ToUnderlyingSymbol();
     }
 }
