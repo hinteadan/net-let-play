@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
 {
-    public interface ICoraxQueryOperator : IStringIdentity
+    public interface ICoraxQueryOperator
     {
         string Symbol { get; }
         string[] SymbolAliases { get; }
