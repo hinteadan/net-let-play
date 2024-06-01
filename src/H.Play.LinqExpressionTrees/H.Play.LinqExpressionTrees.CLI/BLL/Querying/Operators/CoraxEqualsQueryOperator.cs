@@ -6,5 +6,6 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Operators
     {
         public static readonly ICoraxQueryOperator Instance = new CoraxEqualsQueryOperator();
         public override string Symbol { get; } = "==";
+        public override string[] SymbolAliases { get; } = ["="];
     }
 }

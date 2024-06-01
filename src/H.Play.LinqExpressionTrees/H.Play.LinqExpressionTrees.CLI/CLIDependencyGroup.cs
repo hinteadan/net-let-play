@@ -6,11 +6,9 @@ namespace H.Play.LinqExpressionTrees.CLI
     {
         public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {
-            /*
             dependencyRegistry
-                .Register<Logging.DependencyGroup>(() => new Logging.DependencyGroup())
+                .Register<BLL.DependencyGroup>(() => new BLL.DependencyGroup())
                 ;
-            */
         }
     }
 }

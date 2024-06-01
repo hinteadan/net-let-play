@@ -1,5 +1,4 @@
-﻿using H.Necessaire;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
 {
