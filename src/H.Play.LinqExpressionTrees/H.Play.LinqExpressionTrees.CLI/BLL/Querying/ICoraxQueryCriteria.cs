@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
+﻿namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
 {
     public interface ICoraxQueryCriteria
     {
-
+        ICoraxQueryTarget Target { get; }
+        ICoraxQueryOperator Operator { get; }
+        ICoraxQueryValue Value { get; }
+        string ToString();
     }
 }
