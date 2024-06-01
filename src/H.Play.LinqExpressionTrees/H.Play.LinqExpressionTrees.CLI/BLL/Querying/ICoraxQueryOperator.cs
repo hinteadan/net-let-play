@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
 {
@@ -6,6 +7,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
     {
         string Symbol { get; }
         string[] SymbolAliases { get; }
+        ExpressionType[] ExpressionAliases { get; }
         IDictionary<string, object> Attributes { get; }
         string ToUnderlyingSymbol();
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
@@ -8,6 +9,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
     public interface ICoraxQueryPartsFactory
     {
         ICoraxQueryOperator Operator(string symbol);
+        ICoraxQueryOperator Operator(ExpressionType expressionType);
 
 
         public static ICoraxQueryPartsFactory New() => new Concrete();
@@ -17,14 +19,22 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
 
             public ICoraxQueryOperator Operator(string symbol)
             {
-                var assemblyToCheck = Assembly.GetExecutingAssembly();
-                var assemblyOperators = operatorsPerAssemblyDictionary.GetOrAdd(assemblyToCheck, GetAllConcreteOperatorsInAssembly);
-
                 return
-                    assemblyOperators
+                    operatorsPerAssemblyDictionary
+                    .GetOrAdd(Assembly.GetExecutingAssembly(), GetAllConcreteOperatorsInAssembly)
                     .LastOrDefault(op =>
                         op.Symbol == symbol
                         || (op.SymbolAliases?.Any(alias => alias == symbol) == true)
+                    )
+                    ;
+            }
+            public ICoraxQueryOperator Operator(ExpressionType expressionType)
+            {
+                return
+                    operatorsPerAssemblyDictionary
+                    .GetOrAdd(Assembly.GetExecutingAssembly(), GetAllConcreteOperatorsInAssembly)
+                    .LastOrDefault(op =>
+                        (op.ExpressionAliases?.Any(alias => alias == expressionType) == true)
                     )
                     ;
             }

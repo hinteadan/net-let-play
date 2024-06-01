@@ -27,11 +27,12 @@ namespace H.Play.LinqExpressionTrees.CLI.Commands
                 var equalsAlias = coraxQueryPartsFactory.Operator("=");
 
                 int t = 42;
-                Expression<Func<int, bool>> expression = x => x == t;
+                Expression<Func<int, bool>> expression = x => x >= t;
 
 
                 //TODO: Do stuff here
 
+                var op = coraxQueryPartsFactory.Operator(expression.Body.NodeType);
 
             }
 
