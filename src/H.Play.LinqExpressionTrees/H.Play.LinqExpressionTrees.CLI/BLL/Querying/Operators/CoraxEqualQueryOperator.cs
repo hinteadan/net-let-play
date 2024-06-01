@@ -2,9 +2,9 @@
 
 namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Operators
 {
-    public class CoraxEqualsQueryOperator : CoraxQueryOperatorBase
+    public class CoraxEqualQueryOperator : CoraxQueryOperatorBase
     {
-        public static readonly ICoraxQueryOperator Instance = new CoraxEqualsQueryOperator();
+        public static readonly ICoraxQueryOperator Instance = new CoraxEqualQueryOperator();
         public override string Symbol { get; } = "==";
         public override string[] SymbolAliases { get; } = ["="];
     }
