@@ -27,6 +27,7 @@ namespace H.Play.LinqExpressionTrees.CLI.Commands
                 //var c = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute == 1);
                 var d = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute == 1 && t.Date.DayOfWeek >= DayOfWeek.Monday || t.Date.Month > 3);
 
+                var x = coraxQueryBuilder.Explicit.Simple("Hintee", ">", "boom");
             }
 
             return OperationResult.Win();

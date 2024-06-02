@@ -18,7 +18,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
 
 
         ICoraxQueryCriteria Simple(ICoraxQueryTarget target, ICoraxQueryOperator @operator, ICoraxQueryValue value);
-        ICoraxQueryCriteria Simple(string path, string operatorSymbol, object value);
+        ICoraxQueryCriteria Simple(string path, string operatorSymbol, object value, IDictionary<string, object> attributes = null);
         ICoraxQueryCriteria ComposedWithAnd(IEnumerable<ICoraxQueryCriteria> criterias);
         ICoraxQueryCriteria ComposedWithOr(IEnumerable<ICoraxQueryCriteria> criterias);
     }
