@@ -8,6 +8,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
         {
             dependencyRegistry
                 .Register<ICoraxQueryPartsFactory>(ICoraxQueryPartsFactory.New)
+                .Register<ICoraxQueryBuilder>(() => new Concrete.CoraxQueryBuilder())
                 ;
         }
     }
