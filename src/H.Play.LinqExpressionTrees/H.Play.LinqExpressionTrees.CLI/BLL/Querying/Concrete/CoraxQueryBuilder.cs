@@ -79,7 +79,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
                 coraxQueryPartsFactory.Operator(binaryExpression.NodeType)
                 ??
                 throw new CoraxQueryExpressionNotSupportedException($"{binaryExpression.NodeType} expression operator is not supported by Corax Expression Querying or by the underlying storage solution");
-            ;
+                ;
         }
 
         private ICoraxQueryTarget BuildCoraxQueryTarget(Expression targetExpression)
