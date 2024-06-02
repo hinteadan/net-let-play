@@ -2,6 +2,7 @@ using H.Necessaire;
 using H.Necessaire.Runtime.CLI.Commands;
 using H.Play.LinqExpressionTrees.CLI.BLL.Querying;
 using H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace H.Play.LinqExpressionTrees.CLI.Commands
                 //var a =coraxQueryBuilder.BuildFromExpression<int>(t => true);
                 //var b = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t == DateTime.UtcNow);
                 //var c = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute == 1);
-                //var d = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute == 1 && t.Date.DayOfWeek >= DayOfWeek.Monday || t.Date.Month > 3);
+                var d = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute == 1 && (t.Date.DayOfWeek >= DayOfWeek.Monday || t.Date.Month > 3));
 
                 var x = coraxQueryBuilder.Explicit.Simple("Hintee", ">", (CoraxExplicitQueryValue<string>)("test", true), new Dictionary<string, object> { { "tt", 1 } });
             }

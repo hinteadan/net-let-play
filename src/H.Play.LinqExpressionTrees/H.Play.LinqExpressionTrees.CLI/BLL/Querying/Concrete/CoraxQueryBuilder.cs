@@ -18,9 +18,12 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
 
         public ICoraxQueryCriteria BuildFromExpression<TEntity>(Expression<Func<TEntity, bool>> criteriaExpression)
         {
-            var body = criteriaExpression.Body;
+            return BuildFromCriteriaExpression(criteriaExpression.Body);
+        }
 
-            if (body is ConstantExpression constantExpression)
+        private ICoraxQueryCriteria BuildFromCriteriaExpression(Expression criteriaExpression)
+        {
+            if (criteriaExpression is ConstantExpression constantExpression)
             {
                 return
                     new CoraxSimpleQueryCriteria(
@@ -30,13 +33,38 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
                     );
             }
 
-            if (body is BinaryExpression binaryExpression)
+            if (criteriaExpression is BinaryExpression binaryExpression)
             {
+                if (IsComposition(binaryExpression))
+                {
+                    return
+                        BuildFromBinaryCompositionExpression(binaryExpression);
+                }
+
                 return
                     BuildFromBinaryExpression(binaryExpression);
             }
 
             return null;
+        }
+
+        private ICoraxQueryCriteria BuildFromBinaryCompositionExpression(BinaryExpression binaryExpression)
+        {
+            ICoraxQueryCriteria left = BuildFromCriteriaExpression(binaryExpression.Left);
+            ICoraxQueryCriteria right = BuildFromCriteriaExpression(binaryExpression.Right);
+            ICoraxQueryOperator queryOperator = BuildCoraxQueryOperator(binaryExpression);
+
+            return new CoraxCompositeQueryCriteria([left, right], queryOperator);
+        }
+
+        private bool IsComposition(BinaryExpression binaryExpression)
+        {
+            return
+                binaryExpression.NodeType == ExpressionType.And
+                || binaryExpression.NodeType == ExpressionType.AndAlso
+                || binaryExpression.NodeType == ExpressionType.Or
+                || binaryExpression.NodeType == ExpressionType.OrElse
+                ;
         }
 
         private ICoraxQueryCriteria BuildFromBinaryExpression(BinaryExpression binaryExpression)
@@ -93,6 +121,14 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
             if (targetExpression is MemberExpression memberExpression)
             {
                 string path = memberExpression.ToString();
+                path = path.Substring(path.IndexOf(".") + 1);
+                return
+                    new CoraxExplicitQueryTarget(path);
+            }
+
+            if (targetExpression is UnaryExpression unaryExpression)
+            {
+                string path = unaryExpression.Operand.ToString();
                 path = path.Substring(path.IndexOf(".") + 1);
                 return
                     new CoraxExplicitQueryTarget(path);
