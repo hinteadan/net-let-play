@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
+﻿namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
 {
     public static class CoraxQueryExtensions
     {
@@ -13,12 +11,12 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
                 ;
         }
 
-        public static IEnumerable<ICoraxQueryCriteria> AsCriteria(this ICoraxQueryValue value)
+        public static ICoraxQueryCriteria AsCriteria(this ICoraxQueryValue value)
         {
             if (!value.IsCriteria)
                 return null;
 
-            return value.Value as IEnumerable<ICoraxQueryCriteria>;
+            return value.Value as ICoraxQueryCriteria;
         }
     }
 }

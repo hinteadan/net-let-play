@@ -11,7 +11,10 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             coraxQueryPartsFactory = dependencyProvider.Get<ICoraxQueryPartsFactory>();
+            Explicit = dependencyProvider.Get<ICoraxExplicitQueryBuilder>();
         }
+
+        public ICoraxExplicitQueryBuilder Explicit { get; private set; }
 
         public ICoraxQueryCriteria BuildFromExpression<TEntity>(Expression<Func<TEntity, bool>> criteriaExpression)
         {
