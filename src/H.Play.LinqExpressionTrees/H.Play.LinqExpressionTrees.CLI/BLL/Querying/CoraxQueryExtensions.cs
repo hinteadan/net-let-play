@@ -18,5 +18,22 @@
 
             return value.Value as ICoraxQueryCriteria;
         }
+
+        public static ICoraxQueryValue SetParametersObject(this ICoraxQueryValue coraxQueryValue, object parametersObject)
+        {
+            coraxQueryValue.Attributes.Remove("CoraxQueryParametersObject");
+            coraxQueryValue.Attributes.Add("CoraxQueryParametersObject", parametersObject);
+            return coraxQueryValue;
+        }
+
+        public static object GetParametersObject(this ICoraxQueryValue coraxQueryValue)
+        {
+            if (!coraxQueryValue.Attributes.TryGetValue("CoraxQueryParametersObject", out var result))
+            {
+                return null;
+            }
+            
+            return result;
+        }
     }
 }

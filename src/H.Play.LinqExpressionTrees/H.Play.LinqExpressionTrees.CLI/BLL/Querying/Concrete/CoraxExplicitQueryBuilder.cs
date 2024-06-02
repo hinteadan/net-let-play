@@ -14,12 +14,14 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
             coraxQueryPartsFactory = dependencyProvider.Get<ICoraxQueryPartsFactory>();
         }
 
+
         public ICoraxQueryTarget Target(string path, IDictionary<string, object> attributes = null)
         {
             var result = new CoraxExplicitQueryTarget(path);
             AddAttributesIfAny(attributes, result.Attributes);
             return result;
         }
+
 
         public ICoraxQueryOperator Operator(string symbol, IDictionary<string, object> attributes = null)
         {
@@ -44,6 +46,45 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
         }
 
 
+        public ICoraxQueryValue ConstantValue(object value, IDictionary<string, object> attributes = null)
+        {
+            var result
+                = new CoraxExplicitQueryValue(value);
+            AddAttributesIfAny(attributes, result.Attributes);
+            return result;
+        }
+
+        public ICoraxQueryValue ParameterValue(string parameterName, object parametersObject, IDictionary<string, object> attributes = null)
+        {
+            var result
+                = new CoraxExplicitQueryValue(parameterName, isParameter: true)
+                .SetParametersObject(parametersObject)
+                ;
+            AddAttributesIfAny(attributes, result.Attributes);
+            return result;
+        }
+
+        public ICoraxQueryValue SubQueryValue(ICoraxQueryCriteria criteria, IDictionary<string, object> attributes = null)
+        {
+            var result
+                = new CoraxExplicitQueryValue<ICoraxQueryCriteria>(criteria);
+            AddAttributesIfAny(attributes, result.Attributes);
+            return result;
+        }
+
+        public ICoraxQueryCriteria Simple(ICoraxQueryTarget target, ICoraxQueryOperator @operator, ICoraxQueryValue value)
+        {
+            return
+                new CoraxSimpleQueryCriteria(target, @operator, value);
+        }
+
+        public ICoraxQueryCriteria Simple(string path, string operatorSymbol, object value, IDictionary<string, object> attributes = null)
+        {
+            return
+                new CoraxSimpleQueryCriteria(Target(path, attributes), Operator(operatorSymbol, attributes), ConstantValue(value, attributes));
+        }
+
+
         public ICoraxQueryCriteria ComposedWithAnd(IEnumerable<ICoraxQueryCriteria> criterias)
         {
             throw new System.NotImplementedException();
@@ -54,32 +95,17 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
             throw new System.NotImplementedException();
         }
 
-        public ICoraxQueryValue ConstantValue(object value, IDictionary<string, object> attributes = null)
-        {
-            throw new System.NotImplementedException();
-        }
+        
 
 
 
-        public ICoraxQueryValue ParameterValue(string parameterName, object parametersObject, IDictionary<string, object> attributes = null)
-        {
-            throw new System.NotImplementedException();
-        }
+        
 
-        public ICoraxQueryCriteria Simple(ICoraxQueryTarget target, ICoraxQueryOperator @operator, ICoraxQueryValue value)
-        {
-            throw new System.NotImplementedException();
-        }
+        
 
-        public ICoraxQueryCriteria Simple(string target, string @operator, object value)
-        {
-            throw new System.NotImplementedException();
-        }
+        
 
-        public ICoraxQueryValue SubQueryValue(ICoraxQueryCriteria criteria, IDictionary<string, object> attributes = null)
-        {
-            throw new System.NotImplementedException();
-        }
+        
 
 
         private static void AddAttributesIfAny(IDictionary<string, object> source, IDictionary<string, object> destination)
