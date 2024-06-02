@@ -54,7 +54,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
             return result;
         }
 
-        public ICoraxQueryValue ParameterValue(string parameterName, object parametersObject, IDictionary<string, object> attributes = null)
+        public ICoraxQueryValue ParameterValue(string parameterName, object parametersObject = null, IDictionary<string, object> attributes = null)
         {
             var result
                 = new CoraxExplicitQueryValue(parameterName, isParameter: true)
@@ -81,8 +81,10 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
 
         public ICoraxQueryCriteria Simple(string path, string operatorSymbol, object value, IDictionary<string, object> attributes = null)
         {
+            var actualValue = value is ICoraxQueryValue queryValue ? queryValue : ConstantValue(value);
+            AddAttributesIfAny(attributes, actualValue.Attributes);
             return
-                new CoraxSimpleQueryCriteria(Target(path, attributes), Operator(operatorSymbol, attributes), ConstantValue(value, attributes));
+                new CoraxSimpleQueryCriteria(Target(path, attributes), Operator(operatorSymbol, attributes), actualValue);
         }
 
 

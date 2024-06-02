@@ -26,6 +26,9 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
 
         public static ICoraxQueryValue SetParametersObject(this ICoraxQueryValue coraxQueryValue, object parametersObject)
         {
+            if (parametersObject is null)
+                return coraxQueryValue;
+
             coraxQueryValue.Attributes.Remove("CoraxQueryParametersObject");
             coraxQueryValue.Attributes.Add("CoraxQueryParametersObject", parametersObject);
             return coraxQueryValue;

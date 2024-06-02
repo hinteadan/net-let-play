@@ -13,7 +13,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
 
 
         ICoraxQueryValue ConstantValue(object value, IDictionary<string, object> attributes = null);
-        ICoraxQueryValue ParameterValue(string parameterName, object parametersObject, IDictionary<string, object> attributes = null);
+        ICoraxQueryValue ParameterValue(string parameterName, object parametersObject = null, IDictionary<string, object> attributes = null);
         ICoraxQueryValue SubQueryValue(ICoraxQueryCriteria criteria, IDictionary<string, object> attributes = null);
 
 
