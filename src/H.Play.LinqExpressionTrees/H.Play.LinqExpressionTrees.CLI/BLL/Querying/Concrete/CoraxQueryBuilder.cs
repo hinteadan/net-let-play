@@ -1,4 +1,5 @@
 ﻿using H.Necessaire;
+using H.Play.LinqExpressionTrees.CLI.BLL.Querying.Exceptions;
 using System;
 using System.Linq.Expressions;
 
@@ -16,7 +17,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
         {
             var body = criteriaExpression.Body;
 
-            if(body is ConstantExpression constantExpression)
+            if (body is ConstantExpression constantExpression)
             {
                 return
                     new CoraxSimpleQueryCriteria(
@@ -26,7 +27,40 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
                     );
             }
 
+            if (body is BinaryExpression binaryExpression)
+            {
+                return
+                    BuildFromBinaryExpression(binaryExpression);
+            }
+
             return null;
+        }
+
+        private ICoraxQueryCriteria BuildFromBinaryExpression(BinaryExpression binaryExpression)
+        {
+            ICoraxQueryTarget target = BuildCoraxQueryTarget(binaryExpression.Left);
+
+
+            return null;
+        }
+
+        private ICoraxQueryTarget BuildCoraxQueryTarget(Expression targetExpression)
+        {
+            if (targetExpression is ParameterExpression parameterExpression)
+            {
+                return
+                    new CoraxExplicitQueryTarget(null);
+            }
+
+            if (targetExpression is MemberExpression memberExpression)
+            {
+                string path = memberExpression.ToString();
+                path = path.Substring(path.IndexOf(".") + 1);
+                return
+                    new CoraxExplicitQueryTarget(path);
+            }
+
+            throw new CoraxQueryNotSupportedException($"{targetExpression.NodeType} expression type having the concrete implementation {targetExpression.GetType().Name} is not supported by Corax Querying");
         }
     }
 }
