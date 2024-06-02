@@ -8,7 +8,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Abstract
         {
             Value = value;
             IsParameter = isParameter;
-            IsCriteria = Value is ICoraxQueryCriteria;
+            IsCriteria = Value is ICoraxQueryCriteria || Value is IEnumerable<ICoraxQueryCriteria>;
         }
 
         public virtual bool IsParameter { get; }

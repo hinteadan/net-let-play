@@ -72,6 +72,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
             return result;
         }
 
+
         public ICoraxQueryCriteria Simple(ICoraxQueryTarget target, ICoraxQueryOperator @operator, ICoraxQueryValue value)
         {
             return
@@ -87,25 +88,15 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
 
         public ICoraxQueryCriteria ComposedWithAnd(IEnumerable<ICoraxQueryCriteria> criterias)
         {
-            throw new System.NotImplementedException();
+            return
+                new CoraxCompositeQueryCriteria(criterias, @operator: coraxQueryPartsFactory.Operator("&&"));
         }
 
         public ICoraxQueryCriteria ComposedWithOr(IEnumerable<ICoraxQueryCriteria> criterias)
         {
-            throw new System.NotImplementedException();
+            return
+                new CoraxCompositeQueryCriteria(criterias, @operator: coraxQueryPartsFactory.Operator("||"));
         }
-
-        
-
-
-
-        
-
-        
-
-        
-
-        
 
 
         private static void AddAttributesIfAny(IDictionary<string, object> source, IDictionary<string, object> destination)
