@@ -22,9 +22,9 @@ namespace H.Play.LinqExpressionTrees.CLI.Commands
             Log("Debugging...");
             using (new TimeMeasurement(x => Log($"DONE Debugging in {x}")))
             {
-                coraxQueryBuilder.BuildFromExpression<int>(t => true);
-                coraxQueryBuilder.BuildFromExpression<DateTime>(t => t == DateTime.UtcNow);
-                coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute == 1);
+                var a =coraxQueryBuilder.BuildFromExpression<int>(t => true);
+                var b = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t == DateTime.UtcNow);
+                var c = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute == 1);
 
             }
 

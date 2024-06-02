@@ -38,10 +38,45 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
 
         private ICoraxQueryCriteria BuildFromBinaryExpression(BinaryExpression binaryExpression)
         {
-            ICoraxQueryTarget target = BuildCoraxQueryTarget(binaryExpression.Left);
+            ICoraxQueryTarget queryTarget = BuildCoraxQueryTarget(binaryExpression.Left);
+            ICoraxQueryOperator queryOperator = BuildCoraxQueryOperator(binaryExpression);
+            ICoraxQueryValue queryValue = BuildCoraxQueryValue(binaryExpression.Right);
 
+            return new CoraxSimpleQueryCriteria(queryTarget, queryOperator, queryValue);
+        }
 
-            return null;
+        private ICoraxQueryValue BuildCoraxQueryValue(Expression valueExpression)
+        {
+            if (valueExpression is ConstantExpression constantExpression)
+            {
+                object value = constantExpression.Value;
+                return new CoraxExplicitQueryValue(value);
+            }
+
+            if (valueExpression is MemberExpression memberExpression)
+            {
+                object value = GetMemberExpressionValue(memberExpression);
+                return new CoraxExplicitQueryValue(value);
+            }
+
+            throw new CoraxQueryExpressionNotSupportedException($"{valueExpression.NodeType} value expression type having the concrete implementation {valueExpression.GetType().Name} is not supported by Corax Expression Querying");
+        }
+
+        private object GetMemberExpressionValue(MemberExpression memberExpression)
+        {
+            var objectMember = Expression.Convert(memberExpression, typeof(object));
+            var getterLambda = Expression.Lambda<Func<object>>(objectMember);
+            var getter = getterLambda.Compile();
+            return getter();
+        }
+
+        private ICoraxQueryOperator BuildCoraxQueryOperator(BinaryExpression binaryExpression)
+        {
+            return
+                coraxQueryPartsFactory.Operator(binaryExpression.NodeType)
+                ??
+                throw new CoraxQueryExpressionNotSupportedException($"{binaryExpression.NodeType} expression operator is not supported by Corax Expression Querying or by the underlying storage solution");
+            ;
         }
 
         private ICoraxQueryTarget BuildCoraxQueryTarget(Expression targetExpression)
@@ -60,7 +95,7 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
                     new CoraxExplicitQueryTarget(path);
             }
 
-            throw new CoraxQueryNotSupportedException($"{targetExpression.NodeType} expression type having the concrete implementation {targetExpression.GetType().Name} is not supported by Corax Querying");
+            throw new CoraxQueryExpressionNotSupportedException($"{targetExpression.NodeType} expression type having the concrete implementation {targetExpression.GetType().Name} is not supported by Corax Expression Querying");
         }
     }
 }
