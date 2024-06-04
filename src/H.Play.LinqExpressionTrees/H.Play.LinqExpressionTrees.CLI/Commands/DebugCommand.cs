@@ -27,7 +27,7 @@ namespace H.Play.LinqExpressionTrees.CLI.Commands
                 //var b = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t == DateTime.UtcNow);
                 //var c = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute == 1);
                 //var d = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute == 1 && (t.Date.DayOfWeek >= DayOfWeek.Monday || t.Date.Month > 3));
-                var e = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute.Print() == "");
+                //var e = coraxQueryBuilder.BuildFromExpression<DateTime>(t => t.Date.Minute.Print() == "");
                 var f = coraxQueryBuilder.BuildFromExpression<DateTime>(t => Math.Round((decimal)t.Date.Minute, 2) == 1);
 
                 foreach(var deco in f.Target.Decorations)
