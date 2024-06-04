@@ -48,5 +48,11 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
             
             return result;
         }
+
+        public static ICoraxQueryTarget DecorateWith(this ICoraxQueryTarget target, ICoraxQueryTargetDecoration decoration)
+        {
+            target.Decorations.Enqueue(decoration);
+            return target;
+        }
     }
 }
