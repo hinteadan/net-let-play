@@ -1,6 +1,7 @@
 ﻿using H.Necessaire;
 using H.Play.LinqExpressionTrees.CLI.BLL.Querying.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -131,14 +132,19 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
             {
                 string path = unaryExpression.Operand.ToString();
                 path = path.Substring(path.IndexOf(".") + 1);
-                return
-                    new CoraxExplicitQueryTarget(path);
+                var result
+                    = new CoraxExplicitQueryTarget(path);
+                if (unaryExpression.NodeType == ExpressionType.Convert)
+                {
+                    result.Decorations.Enqueue(BuildConvertDecorationFromUnaryExpression(unaryExpression));
+                }
+                return result;
             }
 
             if (targetExpression is MethodCallExpression methodCallExpression)
             {
                 return
-                    BuildCoraxQueryTargetFromMethodCall(methodCallExpression, BuildBuildCoraxQueryTargetDecorationFrom(methodCallExpression));
+                    BuildCoraxQueryTargetFromMethodCall(methodCallExpression, BuildCoraxQueryTargetDecorationFrom(methodCallExpression));
             }
 
             throw new CoraxQueryExpressionNotSupportedException($"{targetExpression.NodeType} expression type having the concrete implementation {targetExpression.GetType().Name} is not supported by Corax Expression Querying");
@@ -146,13 +152,17 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
 
         private ICoraxQueryTarget BuildCoraxQueryTargetFromMethodCall(MethodCallExpression methodCallExpression, params ICoraxQueryTargetDecoration[] decorations)
         {
-            var target = methodCallExpression.Object ?? methodCallExpression.Arguments.FirstOrDefault();
+            var target
+                = methodCallExpression.Object
+                ?? methodCallExpression.Arguments.FirstOrDefault()
+                ;
+
             if (target is null)
                 return null;
 
             if(target is MethodCallExpression decoratorExpression)
             {
-                return BuildCoraxQueryTargetFromMethodCall(decoratorExpression, [BuildBuildCoraxQueryTargetDecorationFrom(decoratorExpression), .. decorations]);
+                return BuildCoraxQueryTargetFromMethodCall(decoratorExpression, [BuildCoraxQueryTargetDecorationFrom(decoratorExpression), .. decorations]);
             }
 
             ICoraxQueryTarget result = BuildCoraxQueryTarget(target);
@@ -166,18 +176,50 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
                 result;
         }
 
-        private ICoraxQueryTargetDecoration BuildBuildCoraxQueryTargetDecorationFrom(MethodCallExpression decorationExpression)
+        private ICoraxQueryTargetDecoration BuildCoraxQueryTargetDecorationFrom(MethodCallExpression decorationExpression)
         {
+            var isExtensionMethod = decorationExpression.Object is null;
             var methodName = decorationExpression.Method.Name;
             var methodOwnerType = decorationExpression.Method.DeclaringType.FullName;
             var methodNamespace = decorationExpression.Method.DeclaringType.Namespace;
+            var arguments = decorationExpression.Arguments.Skip(isExtensionMethod ? 1 : 0).Select(BuildCoraxQueryTargetDecorationArgumentFrom).ToDictionary();
 
-            return
-                new CoraxExplicitQueryTargetDecoration(
+            var result
+                = new CoraxExplicitQueryTargetDecoration(
                     name: methodName,
                     @namespace: methodNamespace,
                     typeName: methodOwnerType
                 );
+
+            AddArgumentsIfAny(arguments, result.Arguments);
+
+            return result;
+        }
+
+        private KeyValuePair<string, object> BuildCoraxQueryTargetDecorationArgumentFrom(Expression argumentExpression, int index)
+        {
+            if(argumentExpression is ConstantExpression constantExpression)
+            {
+                return new KeyValuePair<string, object>($"ConstantArg{index}", constantExpression.Value);
+            }
+
+            throw new CoraxQueryExpressionNotSupportedException($"{argumentExpression.NodeType} expression type having the concrete implementation {argumentExpression.GetType().Name} is not supported by Corax Expression Querying as target decoration argument");
+        }
+
+        private static void AddArgumentsIfAny(IDictionary<string, object> source, IDictionary<string, object> destination)
+        {
+            if (source?.Any() != true)
+                return;
+
+            foreach (var entry in source)
+            {
+                destination.Add(entry);
+            }
+        }
+
+        private static CoraxExplicitQueryTargetDecoration BuildConvertDecorationFromUnaryExpression(UnaryExpression unaryExpression)
+        {
+            return new CoraxExplicitQueryTargetDecoration("Convert", @namespace: unaryExpression.Type.Namespace, typeName: unaryExpression.Type.Name);
         }
     }
 }
