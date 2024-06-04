@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.Play.LinqExpressionTrees.CLI", "H.Play.LinqExpressionTrees.CLI\H.Play.LinqExpressionTrees.CLI.csproj", "{ACFD7B94-BFA4-41D2-9A07-D05796758559}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Play.LinqExpressionTrees.CLI", "H.Play.LinqExpressionTrees.CLI\H.Play.LinqExpressionTrees.CLI.csproj", "{ACFD7B94-BFA4-41D2-9A07-D05796758559}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{625BC08C-6E54-4ED0-8F7C-40F1C0440646}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.Play.LinqExpressionTrees.Tests.Unit", "Tests\H.Play.LinqExpressionTrees.Tests.Unit\H.Play.LinqExpressionTrees.Tests.Unit.csproj", "{077DEFAF-9996-411D-B931-757FB0EB20FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{ACFD7B94-BFA4-41D2-9A07-D05796758559}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACFD7B94-BFA4-41D2-9A07-D05796758559}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACFD7B94-BFA4-41D2-9A07-D05796758559}.Release|Any CPU.Build.0 = Release|Any CPU
+		{077DEFAF-9996-411D-B931-757FB0EB20FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{077DEFAF-9996-411D-B931-757FB0EB20FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{077DEFAF-9996-411D-B931-757FB0EB20FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{077DEFAF-9996-411D-B931-757FB0EB20FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{077DEFAF-9996-411D-B931-757FB0EB20FE} = {625BC08C-6E54-4ED0-8F7C-40F1C0440646}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7359F097-CF70-4496-9ED2-627D602E02C8}

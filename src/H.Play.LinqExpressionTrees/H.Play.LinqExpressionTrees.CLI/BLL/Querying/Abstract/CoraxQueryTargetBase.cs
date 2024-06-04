@@ -13,6 +13,8 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Abstract
 
         public IDictionary<string, object> Attributes { get; } = new Dictionary<string, object>();
 
+        public Queue<ICoraxQueryTargetDecoration> Decorations { get; } = new Queue<ICoraxQueryTargetDecoration>();
+
         public virtual string ToUnderlyingPath() => Path;
     }
 }

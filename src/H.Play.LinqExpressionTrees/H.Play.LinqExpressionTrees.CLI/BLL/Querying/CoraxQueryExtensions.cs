@@ -13,6 +13,11 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying
                 ;
         }
 
+        public static bool IsDecorated(this ICoraxQueryTarget coraxQueryTarget)
+        {
+            return coraxQueryTarget.Decorations.Count > 0;
+        }
+
         public static IEnumerable<ICoraxQueryCriteria> AsCriteria(this ICoraxQueryValue value)
         {
             if (!value.IsCriteria)

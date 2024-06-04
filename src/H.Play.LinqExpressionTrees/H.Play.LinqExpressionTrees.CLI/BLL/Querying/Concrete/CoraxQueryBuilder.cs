@@ -1,6 +1,7 @@
 ﻿using H.Necessaire;
 using H.Play.LinqExpressionTrees.CLI.BLL.Querying.Exceptions;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
@@ -134,7 +135,49 @@ namespace H.Play.LinqExpressionTrees.CLI.BLL.Querying.Concrete
                     new CoraxExplicitQueryTarget(path);
             }
 
+            if (targetExpression is MethodCallExpression methodCallExpression)
+            {
+                return
+                    BuildCoraxQueryTargetFromMethodCall(methodCallExpression, BuildBuildCoraxQueryTargetDecorationFrom(methodCallExpression));
+            }
+
             throw new CoraxQueryExpressionNotSupportedException($"{targetExpression.NodeType} expression type having the concrete implementation {targetExpression.GetType().Name} is not supported by Corax Expression Querying");
+        }
+
+        private ICoraxQueryTarget BuildCoraxQueryTargetFromMethodCall(MethodCallExpression methodCallExpression, params ICoraxQueryTargetDecoration[] decorations)
+        {
+            var target = methodCallExpression.Object ?? methodCallExpression.Arguments.FirstOrDefault();
+            if (target is null)
+                return null;
+
+            if(target is MethodCallExpression decoratorExpression)
+            {
+                return BuildCoraxQueryTargetFromMethodCall(decoratorExpression, [BuildBuildCoraxQueryTargetDecorationFrom(decoratorExpression), .. decorations]);
+            }
+
+            ICoraxQueryTarget result = BuildCoraxQueryTarget(target);
+
+            foreach(var decoration in decorations)
+            {
+                result.Decorations.Enqueue(decoration);
+            }
+
+            return
+                result;
+        }
+
+        private ICoraxQueryTargetDecoration BuildBuildCoraxQueryTargetDecorationFrom(MethodCallExpression decorationExpression)
+        {
+            var methodName = decorationExpression.Method.Name;
+            var methodOwnerType = decorationExpression.Method.DeclaringType.FullName;
+            var methodNamespace = decorationExpression.Method.DeclaringType.Namespace;
+
+            return
+                new CoraxExplicitQueryTargetDecoration(
+                    name: methodName,
+                    @namespace: methodNamespace,
+                    typeName: methodOwnerType
+                );
         }
     }
 }
